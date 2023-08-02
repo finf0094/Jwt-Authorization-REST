@@ -3,6 +3,7 @@ package com.lombard.service.service;
 import com.lombard.service.entities.Client;
 import com.lombard.service.entities.Contract;
 import com.lombard.service.entities.Product;
+import com.lombard.service.exceptions.ContractNotFoundException;
 import com.lombard.service.repository.ClientRepository;
 import com.lombard.service.repository.ContractRepository;
 import com.lombard.service.repository.ProductRepository;
@@ -59,4 +60,25 @@ public class ContractService {
 
         return contract.get();
     }
+
+    public Contract toggleIssuedFalseContractToTrue(Long id) {
+        Optional<Contract> contract = contractRepository.findById(id);
+
+        contract.get().setIssued(true);
+
+        contractRepository.save(contract.get());
+
+        return contract.get();
+    }
+
+    public List<Contract> getContractsByIin(String iin) {
+        List<Contract> contracts = contractRepository.findByClientIin(iin);
+
+
+
+        return Optional.ofNullable(contracts)
+                .orElseThrow(() -> new ContractNotFoundException("No contracts found for the given IIN: " + iin));
+    }
+
+
 }

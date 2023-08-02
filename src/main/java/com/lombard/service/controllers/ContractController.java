@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,4 +49,15 @@ public class ContractController {
     public Contract getContract(@PathVariable Long id) {
         return contractService.getContractById(id);
     }
+
+    @PostMapping("/contract/{id}/print")
+    public Contract toggleIssuedFalseContractToTrue(@PathVariable Long id) {
+        return contractService.toggleIssuedFalseContractToTrue(id);
+    }
+
+    @GetMapping("/find-by-iin/{iin}")
+    public List<Contract> getContractByIin(@PathVariable String iin) {
+        return contractService.getContractsByIin(iin);
+    }
+
 }
