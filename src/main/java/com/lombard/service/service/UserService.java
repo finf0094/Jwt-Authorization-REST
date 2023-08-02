@@ -1,6 +1,7 @@
 package com.lombard.service.service;
 
 import com.lombard.service.dtos.RegistrationUserDto;
+import com.lombard.service.entities.Role;
 import com.lombard.service.entities.User;
 import com.lombard.service.repository.RoleRepository;
 import com.lombard.service.repository.UserRepository;
@@ -67,6 +68,18 @@ public class UserService implements UserDetailsService {
 
         user.setRoles(List.of(roleService.getUserRole()));
         return userRepository.save(user);
+    }
+
+    public User setAdminRole(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        Role role = roleService.getAdminRole();
+
+        user.get().getRoles().add(role);
+
+        userRepository.save(user.get());
+
+        return user.get();
     }
 
 }

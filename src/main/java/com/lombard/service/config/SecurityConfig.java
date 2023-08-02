@@ -36,12 +36,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.
-                csrf().disable()
-                .cors().disable()
+                csrf().disable().
+                cors().and()
                 .authorizeRequests()
                 .antMatchers("/secured").authenticated()
                 .antMatchers("/info").authenticated()
+                .antMatchers("/create-contract").hasRole("USER")
+                .antMatchers("/formed-contracts").hasRole("USER")
                 .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/register").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,6 +1,5 @@
 package com.lombard.service.config;
 
-import com.lombard.service.entities.Role;
 import com.lombard.service.utils.JwtTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -17,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -25,8 +23,10 @@ import java.util.stream.Collectors;
 public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
 
+
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
@@ -36,7 +36,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtils.getUserName(jwt);
             } catch (ExpiredJwtException e) {
-                log.debug("Время жихни токена вышло");
+                log.debug("Время жизни токена вышло");
             } catch (SignatureException e) {
                 log.debug("Подпись неправильная");
             }
@@ -50,6 +50,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }
+
         filterChain.doFilter(request, response);
 
     }
