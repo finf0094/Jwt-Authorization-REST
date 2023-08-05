@@ -29,8 +29,13 @@ public class ContractService {
 
     public ResponseEntity<Contract> createContract(Client client, Product product) {
 
+        product.calculateLastPaymentDate();
+        product.calculateUpdatedSums();
+
         client = clientRepository.save(client);
         product = productRepository.save(product);
+
+
 
 
         Contract contract = new Contract();
