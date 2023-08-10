@@ -2,7 +2,6 @@ package com.lombard.service.dtos;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 
 @Data
 public class RegistrationUserDto {

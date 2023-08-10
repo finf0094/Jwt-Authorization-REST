@@ -23,6 +23,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "total_amount_issued")
+    private Long totalAmountIssued = 0L;
     @ManyToMany
     @JoinTable(
             name = "users_roles",

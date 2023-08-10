@@ -4,11 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -16,7 +11,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Slf4j
 public class Product {
 
     @Id

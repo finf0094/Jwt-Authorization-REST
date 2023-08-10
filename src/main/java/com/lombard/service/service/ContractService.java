@@ -3,28 +3,32 @@ package com.lombard.service.service;
 import com.lombard.service.entities.Client;
 import com.lombard.service.entities.Contract;
 import com.lombard.service.entities.Product;
+import com.lombard.service.entities.User;
 import com.lombard.service.exceptions.ContractNotFoundException;
 import com.lombard.service.repository.ClientRepository;
 import com.lombard.service.repository.ContractRepository;
 import com.lombard.service.repository.ProductRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
 public class ContractService {
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
     private final ContractRepository contractRepository;
 
-    public ContractService(ClientRepository clientRepository, ProductRepository productRepository, ContractRepository contractRepository) {
+    private final UserService userService;
+
+    public ContractService(ClientRepository clientRepository, ProductRepository productRepository, ContractRepository contractRepository, UserService userService) {
         this.clientRepository = clientRepository;
         this.productRepository = productRepository;
         this.contractRepository = contractRepository;
+        this.userService = userService;
     }
 
     public ResponseEntity<Contract> createContract(Client client, Product product) {
@@ -69,6 +73,12 @@ public class ContractService {
     public Contract toggleIssuedFalseContractToTrue(Long id) {
         Optional<Contract> contract = contractRepository.findById(id);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = userService.findByUserName(authentication.getPrincipal().toString()).orElseThrow();
+
+        user.setTotalAmountIssued((long) (user.getTotalAmountIssued() + contract.get().getProduct().getSum()));
+
         contract.get().setIssued(true);
 
         contractRepository.save(contract.get());
@@ -78,7 +88,6 @@ public class ContractService {
 
     public List<Contract> getContractsByIin(String iin) {
         List<Contract> contracts = contractRepository.findByClientIin(iin);
-
 
 
         return Optional.ofNullable(contracts)

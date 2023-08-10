@@ -1,10 +1,7 @@
 package com.lombard.service.controllers;
 
 import com.lombard.service.dtos.ContractRequestDto;
-import com.lombard.service.entities.Client;
 import com.lombard.service.entities.Contract;
-import com.lombard.service.entities.Product;
-import com.lombard.service.exceptions.AppError;
 import com.lombard.service.service.ContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor

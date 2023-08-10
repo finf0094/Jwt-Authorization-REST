@@ -12,4 +12,5 @@ public class UserInfoDto {
     private String username;
     private String email;
     private List<Role> roles;
+    private Long totalAmountIssued;
 }
