@@ -52,6 +52,7 @@ public class AuthController {
         userInfoDto.setEmail(user.getEmail());
         userInfoDto.setRoles(new ArrayList<>(user.getRoles()));
         userInfoDto.setTotalAmountIssued(user.getTotalAmountIssued());
+        userInfoDto.setFullName(user.getFullName());
 
         return ResponseEntity.ok(userInfoDto);
     }

@@ -1,6 +1,7 @@
 package com.lombard.service.repository;
 
 import com.lombard.service.entities.Contract;
+import com.lombard.service.entities.ContractStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,7 @@ import java.util.Optional;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
     List<Contract> findByIssuedFalse();
+
     @Modifying
     @Query("DELETE FROM Contract c WHERE c.issued = false AND c.id = :contractId")
     void deleteIssuedFalseById(Long contractId);
@@ -19,4 +21,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     Optional<Contract> findById(Long id);
 
     List<Contract> findByClientIin(String iin);
+
+    List<Contract> findContractByContractStatus(ContractStatus contractStatus);
 }

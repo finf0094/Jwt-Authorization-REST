@@ -33,7 +33,7 @@ public class ContractController {
 
     @DeleteMapping("/delete-formed-contract/{id}")
     public ResponseEntity<Void> deleteIssuedFalseContractById(@PathVariable Long id) {
-        boolean deleted = contractService.deleteIssuedFalseContractById(id);
+        boolean deleted = contractService.deleteById(id);
         if (deleted) {
             return ResponseEntity.noContent().build();
         } else {

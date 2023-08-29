@@ -8,6 +8,7 @@ import com.lombard.service.exceptions.ContractNotFoundException;
 import com.lombard.service.repository.ClientRepository;
 import com.lombard.service.repository.ContractRepository;
 import com.lombard.service.repository.ProductRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,14 +22,16 @@ public class ContractService {
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
     private final ContractRepository contractRepository;
-
     private final UserService userService;
 
-    public ContractService(ClientRepository clientRepository, ProductRepository productRepository, ContractRepository contractRepository, UserService userService) {
+    private final ContractStatusService contractStatusService;
+
+    public ContractService(ClientRepository clientRepository, ProductRepository productRepository, ContractRepository contractRepository, UserService userService, ContractStatusService contractStatusService) {
         this.clientRepository = clientRepository;
         this.productRepository = productRepository;
         this.contractRepository = contractRepository;
         this.userService = userService;
+        this.contractStatusService = contractStatusService;
     }
 
     public ResponseEntity<Contract> createContract(Client client, Product product) {
@@ -40,11 +43,11 @@ public class ContractService {
         product = productRepository.save(product);
 
 
-
-
         Contract contract = new Contract();
         contract.setClient(client);
         contract.setProduct(product);
+
+        contract.setContractStatus(contractStatusService.getFormedStatus());
 
         contractRepository.save(contract);
 
@@ -52,13 +55,14 @@ public class ContractService {
     }
 
     public List<Contract> getFormedContract() {
-        return contractRepository.findByIssuedFalse();
+        return contractRepository.findContractByContractStatus(contractStatusService.getFormedStatus());
     }
 
-    public boolean deleteIssuedFalseContractById(Long contractId) {
-        Contract contract = contractRepository.findByIdAndIssuedFalse(contractId);
+
+    public boolean deleteById(Long contractId) {
+        Optional<Contract> contract = contractRepository.findById(contractId);
         if (contract != null) {
-            contractRepository.delete(contract);
+            contractRepository.delete(contract.get());
             return true;
         }
         return false;
@@ -79,7 +83,7 @@ public class ContractService {
 
         user.setTotalAmountIssued((long) (user.getTotalAmountIssued() + contract.get().getProduct().getSum()));
 
-        contract.get().setIssued(true);
+        contract.get().setContractStatus(contractStatusService.getIssuedContract());
 
         contractRepository.save(contract.get());
 
